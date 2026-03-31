@@ -45,16 +45,44 @@
     }
     a { color: inherit; text-decoration: none; }
 
-    /* Entrance animation */
-    @keyframes fadeUp {
-      from { opacity:0; transform:translateY(24px); }
-      to   { opacity:1; transform:translateY(0); }
+    /* ============================================================
+       SCROLL-REVEAL ANIMATION SYSTEM
+       Elements with class .a start invisible (opacity 0, shifted
+       26px down). JS IntersectionObserver adds .visible when each
+       element enters the viewport, triggering the smooth transition.
+       Delay classes (.d1–.d4) stagger child elements cleanly.
+    ============================================================ */
+
+    /* Hidden start state */
+    .a {
+      opacity: 0;
+      transform: translateY(26px);
+      transition:
+        opacity   0.6s cubic-bezier(0.22, 1, 0.36, 1),
+        transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
     }
-    .a  { animation: fadeUp 0.6s ease both; }
-    .d1 { animation-delay: 0.08s; }
-    .d2 { animation-delay: 0.18s; }
-    .d3 { animation-delay: 0.28s; }
-    .d4 { animation-delay: 0.38s; }
+
+    /* Revealed state — JS adds this class on scroll */
+    .a.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Stagger delays for grouped child elements */
+    .d1 { transition-delay: 0.00s; }
+    .d2 { transition-delay: 0.12s; }
+    .d3 { transition-delay: 0.22s; }
+    .d4 { transition-delay: 0.32s; }
+
+    /* Hero items: animate on page load (above the fold, no observer) */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(26px); }
+      to   { opacity: 1; transform: translateY(0);    }
+    }
+    .hero-anim        { animation: fadeUp 0.65s cubic-bezier(0.22,1,0.36,1) both; }
+    .hero-anim.d1     { animation-delay: 0.05s; }
+    .hero-anim.d2     { animation-delay: 0.17s; }
+    .hero-anim.d3     { animation-delay: 0.29s; }
 
     .container { max-width: 900px; margin: 0 auto; padding: 0 28px; }
 
@@ -178,33 +206,60 @@
       flex-wrap:wrap; gap:12px; margin-top:36px;
     }
 
-    /* Buttons */
+    /* ============================================================
+       BUTTONS
+       All buttons share a smooth transition. Hover: lift +
+       deeper shadow. Active (click): press down by 1px.
+    ============================================================ */
     .btn {
       display:inline-flex; align-items:center; gap:8px;
       font-family:'DM Sans',sans-serif;
       font-size:14px; font-weight:600;
       padding:12px 26px; border-radius:var(--radius-sm);
       cursor:pointer; border:none;
-      transition:var(--transition); text-decoration:none;
+      /* Fine-tuned transition for each property */
+      transition:
+        background  0.22s ease,
+        color       0.22s ease,
+        border-color 0.22s ease,
+        transform   0.20s cubic-bezier(0.34, 1.56, 0.64, 1),
+        box-shadow  0.22s ease;
+      text-decoration:none;
     }
+    .btn:active {
+      transform: translateY(1px) scale(0.98) !important;
+      box-shadow: none !important;
+    }
+
     .btn-primary {
       background:var(--blue); color:#fff;
       box-shadow:0 4px 16px rgba(26,86,219,0.35);
     }
     .btn-primary:hover {
-      background:#1648c0; transform:translateY(-2px);
-      box-shadow:0 8px 24px rgba(26,86,219,0.45);
+      background:#1648c0;
+      transform: translateY(-3px) scale(1.01);
+      box-shadow: 0 10px 28px rgba(26,86,219,0.45);
     }
+
     .btn-outline {
       background:rgba(255,255,255,0.08); color:#fff;
       border:1px solid rgba(255,255,255,0.22);
     }
-    .btn-outline:hover { background:rgba(255,255,255,0.14); transform:translateY(-2px); }
+    .btn-outline:hover {
+      background:rgba(255,255,255,0.16);
+      border-color: rgba(255,255,255,0.40);
+      transform: translateY(-3px);
+    }
+
     .btn-outline-dark {
       background:rgba(26,86,219,0.08); color:var(--blue);
       border:1px solid rgba(26,86,219,0.25);
     }
-    .btn-outline-dark:hover { background:rgba(26,86,219,0.14); transform:translateY(-2px); }
+    .btn-outline-dark:hover {
+      background:rgba(26,86,219,0.15);
+      border-color: rgba(26,86,219,0.50);
+      transform: translateY(-3px);
+    }
     .btn-icon { font-size:16px; }
 
     /* ============================================================
@@ -280,10 +335,14 @@
       background:var(--card); border:1px solid var(--border);
       border-radius:var(--radius-md); padding:22px 24px;
       display:flex; align-items:flex-start; gap:16px;
-      box-shadow:var(--shadow-card); transition:var(--transition);
+      box-shadow:var(--shadow-card);
+      transition:
+        transform   0.22s cubic-bezier(0.34,1.56,0.64,1),
+        box-shadow  0.22s ease,
+        border-color 0.22s ease;
     }
     .skill-card:hover {
-      transform:translateY(-3px);
+      transform:translateY(-4px);
       box-shadow:var(--shadow-hover); border-color:#bfdbfe;
     }
     .skill-icon {
@@ -317,9 +376,11 @@
       border-radius:var(--radius-md); overflow:hidden;
       box-shadow:var(--shadow-card);
       display:flex; flex-direction:column;
-      transition:var(--transition);
+      transition:
+        transform   0.22s cubic-bezier(0.34,1.56,0.64,1),
+        box-shadow  0.22s ease;
     }
-    .project-card:hover { transform:translateY(-4px); box-shadow:var(--shadow-hover); }
+    .project-card:hover { transform:translateY(-5px); box-shadow:var(--shadow-hover); }
 
     .project-stripe { height:5px; }
     .project-body { padding:26px 26px 16px; flex:1; }
@@ -394,10 +455,14 @@
       background:var(--card); border:1px solid var(--border);
       border-radius:var(--radius-md); padding:20px 22px;
       display:flex; align-items:flex-start; gap:14px;
-      box-shadow:var(--shadow-card); transition:var(--transition);
+      box-shadow:var(--shadow-card);
+      transition:
+        transform   0.22s cubic-bezier(0.34,1.56,0.64,1),
+        box-shadow  0.22s ease,
+        border-color 0.22s ease;
     }
     .contact-card:hover {
-      border-color:#bfdbfe; transform:translateY(-3px);
+      border-color:#bfdbfe; transform:translateY(-4px);
       box-shadow:var(--shadow-hover);
     }
     .contact-icon { font-size:22px; line-height:1; flex-shrink:0; }
@@ -407,6 +472,273 @@
       color:var(--blue); margin-bottom:3px;
     }
     .contact-val { font-size:14px; font-weight:500; word-break:break-all; }
+
+    /* ============================================================
+       CONTACT FORM
+    ============================================================ */
+
+    /* Two-column layout: info cards left, form right */
+    .contact-layout {
+      display: grid;
+      grid-template-columns: 1fr 1.4fr;
+      gap: 32px;
+      align-items: start;
+    }
+
+    /* Left column — stacked info cards */
+    .contact-info { display: flex; flex-direction: column; gap: 14px; }
+
+    /* Info card intro text */
+    .contact-intro {
+      font-size: 15px; color: var(--muted);
+      line-height: 1.75; margin-bottom: 6px;
+    }
+
+    /* The white form card on the right */
+    .contact-form-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-card);
+      padding: 36px 40px;
+    }
+
+    .form-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: 22px; font-weight: 400;
+      color: var(--ink); margin-bottom: 6px;
+    }
+    .form-subtitle {
+      font-size: 13.5px; color: var(--muted);
+      margin-bottom: 28px;
+    }
+
+    /* Each label + input pair */
+    .form-group { margin-bottom: 20px; }
+
+    .form-label {
+      display: block;
+      font-size: 13px; font-weight: 600;
+      color: var(--ink);
+      margin-bottom: 7px;
+      letter-spacing: 0.01em;
+    }
+
+    /* Required star */
+    .form-label .req { color: var(--blue); margin-left: 2px; }
+
+    /* Shared input / textarea style */
+    .form-input,
+    .form-textarea {
+      width: 100%;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14.5px;
+      color: var(--ink);
+      background: var(--slate-bg);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 11px 14px;
+      outline: none;
+      transition:
+        border-color 0.2s ease,
+        background   0.2s ease,
+        box-shadow   0.2s ease;
+      /* Prevent white flash on autofill in Chrome */
+      -webkit-text-fill-color: var(--ink);
+    }
+
+    /* Focus ring — matches the blue theme */
+    .form-input:focus,
+    .form-textarea:focus {
+      border-color: var(--blue);
+      background: #fff;
+      box-shadow: 0 0 0 3px rgba(26, 86, 219, 0.12);
+    }
+
+    /* Validation — red border on invalid after interaction */
+    .form-input:user-invalid,
+    .form-textarea:user-invalid {
+      border-color: #ef4444;
+      box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.10);
+    }
+
+    /* Textarea specifics */
+    .form-textarea {
+      resize: vertical;
+      min-height: 128px;
+      line-height: 1.65;
+    }
+
+    /* Character counter below textarea */
+    .char-counter {
+      text-align: right;
+      font-size: 11.5px;
+      color: var(--muted);
+      margin-top: 5px;
+    }
+    .char-counter.warn { color: #f59e0b; }
+    .char-counter.over { color: #ef4444; }
+
+    /* Submit button — full width inside form */
+    .btn-submit {
+      width: 100%;
+      display: flex; align-items: center; justify-content: center; gap: 9px;
+      background: var(--blue); color: #fff;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 15px; font-weight: 600;
+      padding: 14px 28px;
+      border: none; border-radius: var(--radius-sm);
+      cursor: pointer;
+      box-shadow: 0 4px 16px rgba(26, 86, 219, 0.32);
+      transition:
+        background  0.2s ease,
+        transform   0.20s cubic-bezier(0.34, 1.56, 0.64, 1),
+        box-shadow  0.2s ease;
+      margin-top: 4px;
+    }
+    .btn-submit:hover {
+      background: #1648c0;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(26, 86, 219, 0.42);
+    }
+    .btn-submit:active {
+      transform: translateY(1px);
+      box-shadow: none;
+    }
+    /* While submitting — spinner state */
+    .btn-submit.loading {
+      pointer-events: none;
+      opacity: 0.80;
+    }
+
+    /* Spinner icon inside button */
+    .btn-spinner {
+      width: 16px; height: 16px;
+      border: 2px solid rgba(255,255,255,0.35);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      display: none;
+    }
+    .btn-submit.loading .btn-spinner { display: block; }
+    .btn-submit.loading .btn-submit-text { display: none; }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* ============================================================
+       SUCCESS POPUP MODAL
+       Appears after form submit. Backdrop dims the page,
+       modal card slides up from below.
+    ============================================================ */
+
+    /* Dark semi-transparent backdrop */
+    .popup-backdrop {
+      position: fixed; inset: 0;
+      z-index: 1100;
+      background: rgba(10, 18, 40, 0.55);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      display: flex; align-items: center; justify-content: center;
+      padding: 24px;
+      /* Hidden by default — JS adds .show */
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+    .popup-backdrop.show {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    /* The white popup card */
+    .popup-card {
+      background: var(--card);
+      border-radius: var(--radius-lg);
+      box-shadow: 0 24px 64px rgba(10, 18, 40, 0.28);
+      padding: 48px 44px 40px;
+      max-width: 420px; width: 100%;
+      text-align: center;
+      position: relative;
+      /* Slide-up entrance */
+      transform: translateY(24px) scale(0.97);
+      transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .popup-backdrop.show .popup-card {
+      transform: translateY(0) scale(1);
+    }
+
+    /* Green success circle */
+    .popup-icon {
+      width: 72px; height: 72px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #22c55e, #16a34a);
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 24px;
+      box-shadow: 0 8px 24px rgba(34, 197, 94, 0.30);
+      font-size: 32px;
+    }
+
+    /* Animated checkmark inside the circle */
+    .popup-check {
+      width: 34px; height: 34px;
+      stroke: #fff;
+      stroke-width: 3;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      fill: none;
+    }
+    .popup-check .check-path {
+      stroke-dasharray: 50;
+      stroke-dashoffset: 50;
+      transition: stroke-dashoffset 0.45s ease 0.2s;
+    }
+    .popup-backdrop.show .check-path {
+      stroke-dashoffset: 0; /* draws the tick when popup opens */
+    }
+
+    .popup-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: 24px; font-weight: 400;
+      color: var(--ink); margin-bottom: 10px;
+    }
+    .popup-msg {
+      font-size: 15px; color: var(--muted);
+      line-height: 1.7; margin-bottom: 28px;
+    }
+
+    /* Dismiss button */
+    .popup-close {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--blue); color: #fff;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14.5px; font-weight: 600;
+      padding: 12px 32px; border: none;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(26, 86, 219, 0.30);
+      transition:
+        background  0.2s,
+        transform   0.20s cubic-bezier(0.34, 1.56, 0.64, 1),
+        box-shadow  0.2s;
+    }
+    .popup-close:hover {
+      background: #1648c0;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(26, 86, 219, 0.38);
+    }
+
+    /* Small × close button in corner */
+    .popup-x {
+      position: absolute; top: 16px; right: 18px;
+      width: 30px; height: 30px; border-radius: 50%;
+      background: none; border: none;
+      font-size: 18px; color: var(--muted);
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      transition: background 0.18s, color 0.18s;
+    }
+    .popup-x:hover { background: var(--slate-bg); color: var(--ink); }
 
     /* ============================================================
        FOOTER
@@ -439,6 +771,11 @@
       }
       .nav-links.open { display:flex; }
       .nav-links a { width:100%; padding:10px 12px; font-size:15px; }
+
+      /* Stack contact layout to single column on mobile */
+      .contact-layout { grid-template-columns: 1fr; }
+      .contact-form-card { padding: 28px 22px; }
+      .popup-card { padding: 36px 24px 30px; }
     }
   </style>
 </head>
@@ -469,14 +806,14 @@
 <section id="home">
   <div class="hero">
     <div class="container hero-inner">
-      <div class="hero-avatar a d1">AK</div>
-      <h1 class="a d1">Ahtesham <em>Khan</em></h1>
-      <div class="hero-meta a d2">
+      <div class="hero-avatar hero-anim d1">AK</div>
+      <h1 class="hero-anim d1">Ahtesham <em>Khan</em></h1>
+      <div class="hero-meta hero-anim d2">
         <span class="hero-badge"><span class="dot"></span>Business Analyst</span>
         <span class="hero-badge"><span class="dot"></span>Banking Domain</span>
         <span class="hero-badge"><span class="dot"></span>Hyderabad, IN</span>
       </div>
-      <div class="hero-cta a d3">
+      <div class="hero-cta hero-anim d3">
         <a href="#contact" class="btn btn-primary">
           <span class="btn-icon">✉</span> Get In Touch
         </a>
@@ -717,7 +1054,7 @@
         <a href="Ahtesham_Khan_Resume.pdf" download class="btn btn-primary">
           <span class="btn-icon">⬇</span> Download PDF
         </a>
-        <a href="mailto:ahtesham@example.com" class="btn btn-outline">
+        <a href="/cdn-cgi/l/email-protection#e0818894859388818da08598818d908c85ce838f8d" class="btn btn-outline">
           <span class="btn-icon">✉</span> Request via Email
         </a>
       </div>
@@ -729,49 +1066,165 @@
 <!-- CONTACT -->
 <section class="section" id="contact">
   <div class="container">
+
+    <!-- Section heading -->
     <div class="section-header a d1">
       <div class="section-num">📬</div>
       <h2 class="section-title">Get In Touch</h2>
       <div class="section-rule"></div>
     </div>
-    <div class="contact-grid a d2">
-      <!-- Replace all placeholder values below with real details -->
-      <a class="contact-card" href="mailto:ahtesham@example.com">
-        <span class="contact-icon">✉️</span>
-        <div>
-          <div class="contact-label">Email</div>
-          <div class="contact-val">ahtesham@example.com</div>
-        </div>
-      </a>
-      <a class="contact-card" href="https://linkedin.com/in/yourprofile" target="_blank" rel="noopener">
-        <span class="contact-icon">💼</span>
-        <div>
-          <div class="contact-label">LinkedIn</div>
-          <div class="contact-val">linkedin.com/in/yourprofile</div>
-        </div>
-      </a>
-      <a class="contact-card" href="tel:+919000000000">
-        <span class="contact-icon">📞</span>
-        <div>
-          <div class="contact-label">Phone</div>
-          <div class="contact-val">+91 90000 00000</div>
-        </div>
-      </a>
-      <a class="contact-card" href="#">
-        <span class="contact-icon">📍</span>
-        <div>
-          <div class="contact-label">Location</div>
-          <div class="contact-val">Hyderabad, Telangana, India</div>
-        </div>
-      </a>
-    </div>
-    <div class="a d3">
-      <a href="mailto:ahtesham@example.com" class="btn btn-primary" style="font-size:15px;padding:14px 36px;">
-        <span class="btn-icon">✉</span> Send Me a Message
-      </a>
-    </div>
+
+    <!-- Two-column: info cards (left) + form (right) -->
+    <div class="contact-layout a d2">
+
+      <!-- LEFT — info cards -->
+      <div class="contact-info">
+        <p class="contact-intro">
+          I'm open to new opportunities in the banking and fintech space.
+          Fill in the form and I'll get back to you within 24 hours.
+        </p>
+
+        <!-- Replace href/values with your real details -->
+        <a class="contact-card" href="mailto:ahtesham.khan@example.com">
+          <span class="contact-icon">✉️</span>
+          <div>
+            <div class="contact-label">Email</div>
+            <div class="contact-val">ahtesham.khan@example.com</div>
+          </div>
+        </a>
+
+        <a class="contact-card" href="https://linkedin.com/in/yourprofile" target="_blank" rel="noopener">
+          <span class="contact-icon">💼</span>
+          <div>
+            <div class="contact-label">LinkedIn</div>
+            <div class="contact-val">linkedin.com/in/yourprofile</div>
+          </div>
+        </a>
+
+        <a class="contact-card" href="tel:+919000000000">
+          <span class="contact-icon">📞</span>
+          <div>
+            <div class="contact-label">Phone</div>
+            <div class="contact-val">+91 90000 00000</div>
+          </div>
+        </a>
+
+        <a class="contact-card" href="#">
+          <span class="contact-icon">📍</span>
+          <div>
+            <div class="contact-label">Location</div>
+            <div class="contact-val">Hyderabad, Telangana, India</div>
+          </div>
+        </a>
+      </div><!-- /contact-info -->
+
+      <!-- RIGHT — contact form -->
+      <div class="contact-form-card">
+        <h3 class="form-title">Send a Message</h3>
+        <p class="form-subtitle">All fields marked <span style="color:var(--blue)">*</span> are required.</p>
+
+        <!--
+          id="contactForm" is used by JS to intercept submit.
+          novalidate lets us run our own validation before the
+          browser tries to submit — we handle it all in JS.
+        -->
+        <form id="contactForm" novalidate>
+
+          <!-- Name -->
+          <div class="form-group">
+            <label class="form-label" for="cf-name">
+              Full Name <span class="req">*</span>
+            </label>
+            <input
+              class="form-input"
+              type="text"
+              id="cf-name"
+              name="name"
+              placeholder="e.g. Rahul Sharma"
+              autocomplete="name"
+              required
+            />
+          </div>
+
+          <!-- Email -->
+          <div class="form-group">
+            <label class="form-label" for="cf-email">
+              Email Address <span class="req">*</span>
+            </label>
+            <input
+              class="form-input"
+              type="email"
+              id="cf-email"
+              name="email"
+              placeholder="e.g. rahul@company.com"
+              autocomplete="email"
+              required
+            />
+          </div>
+
+          <!-- Message -->
+          <div class="form-group">
+            <label class="form-label" for="cf-message">
+              Message <span class="req">*</span>
+            </label>
+            <textarea
+              class="form-textarea"
+              id="cf-message"
+              name="message"
+              placeholder="Tell me about your project, role, or enquiry…"
+              maxlength="600"
+              required
+            ></textarea>
+            <!-- Live character counter — updated by JS -->
+            <div class="char-counter" id="charCounter">0 / 600</div>
+          </div>
+
+          <!-- Submit -->
+          <button type="submit" class="btn-submit" id="submitBtn">
+            <!-- Spinner shown while "sending" -->
+            <span class="btn-spinner" id="btnSpinner"></span>
+            <!-- Normal label -->
+            <span class="btn-submit-text">
+              <span style="font-size:16px">✉</span>&nbsp; Send Message
+            </span>
+          </button>
+
+        </form>
+      </div><!-- /contact-form-card -->
+
+    </div><!-- /contact-layout -->
   </div>
 </section>
+
+
+<!-- ======================================================
+     SUCCESS POPUP MODAL
+     Hidden by default. JS adds .show on form submit.
+====================================================== -->
+<div class="popup-backdrop" id="popupBackdrop" role="dialog" aria-modal="true" aria-labelledby="popupTitle">
+
+  <div class="popup-card">
+
+    <!-- × close button in corner -->
+    <button class="popup-x" id="popupX" aria-label="Close">✕</button>
+
+    <!-- Animated green checkmark -->
+    <div class="popup-icon">
+      <svg class="popup-check" viewBox="0 0 34 34">
+        <path class="check-path" d="M6 17 L14 25 L28 10" />
+      </svg>
+    </div>
+
+    <h3 class="popup-title" id="popupTitle">Message Sent!</h3>
+    <p class="popup-msg">
+      Thank you! I will get back to you<br>within 24 hours.
+    </p>
+
+    <!-- Dismiss button -->
+    <button class="popup-close" id="popupClose">Got it &nbsp;👍</button>
+
+  </div>
+</div>
 
 
 <!-- FOOTER -->
@@ -785,49 +1238,237 @@
 </footer>
 
 
-<!-- JAVASCRIPT: Nav shadow, active link, hamburger toggle -->
+<!-- JAVASCRIPT -->
 <script>
-  const navbar    = document.getElementById('navbar');
-  const navLinks  = document.getElementById('navLinks');
-  const navToggle = document.getElementById('navToggle');
-
-  /* Hamburger */
-  navToggle.addEventListener('click', () => {
-    navToggle.classList.toggle('open');
-    navLinks.classList.toggle('open');
-  });
-  navLinks.querySelectorAll('a').forEach(a => {
-    a.addEventListener('click', () => {
-      navToggle.classList.remove('open');
-      navLinks.classList.remove('open');
+/* ── 1. SCROLL-REVEAL (IntersectionObserver) ──────────────────────────
+   Watches every element with class .a. When one enters the viewport
+   (even partially), .visible is added — CSS handles the fade+rise.
+   Once revealed, the observer stops watching that element (no re-trigger).
+──────────────────────────────────────────────────────────────────────── */
+const revealObserver = new IntersectionObserver(
+  (entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        revealObserver.unobserve(entry.target); // reveal once only
+      }
     });
-  });
-
-  /* Nav shadow */
-  window.addEventListener('scroll', () => {
-    navbar.classList.toggle('scrolled', window.scrollY > 8);
-    updateActive();
-  });
-
-  /* Active link */
-  const sectionIds = ['home','summary','skills','projects','resume','contact'];
-  const linkMap = {};
-  sectionIds.forEach(id => {
-    linkMap[id] = navLinks.querySelector(`a[href="#${id}"]`);
-  });
-
-  function updateActive() {
-    let current = 'home';
-    sectionIds.forEach(id => {
-      const el = document.getElementById(id);
-      if (el && el.getBoundingClientRect().top < window.innerHeight * 0.42) current = id;
-    });
-    sectionIds.forEach(id => {
-      if (linkMap[id]) linkMap[id].classList.toggle('active', id === current);
-    });
+  },
+  {
+    threshold: 0.12,        // trigger when 12% of element is visible
+    rootMargin: '0px 0px -40px 0px' // start slightly before viewport bottom
   }
-  updateActive();
-</script>
+);
 
+// Observe every element marked for reveal
+document.querySelectorAll('.a').forEach(el => revealObserver.observe(el));
+
+
+/* ── 2. NAV SHADOW ON SCROLL ──────────────────────────────────────────
+   Adds a deeper box-shadow to the sticky nav once the user scrolls
+   past the hero, so the nav visually "lifts" above the content.
+──────────────────────────────────────────────────────────────────────── */
+const navbar = document.getElementById('navbar');
+
+window.addEventListener('scroll', () => {
+  navbar.classList.toggle('scrolled', window.scrollY > 8);
+  updateActiveLink();
+}, { passive: true }); // passive: true = smoother scroll performance
+
+
+/* ── 3. ACTIVE NAV LINK ───────────────────────────────────────────────
+   Highlights the nav link that corresponds to the section currently
+   in view. Checks section positions on every scroll event.
+──────────────────────────────────────────────────────────────────────── */
+const navLinks  = document.getElementById('navLinks');
+const navToggle = document.getElementById('navToggle');
+
+const sectionIds = ['home', 'summary', 'skills', 'projects', 'resume', 'contact'];
+
+// Build a map: section id → nav <a> element
+const linkMap = {};
+sectionIds.forEach(id => {
+  linkMap[id] = navLinks.querySelector(`a[href="#${id}"]`);
+});
+
+function updateActiveLink() {
+  // Trigger point: 35% from the top of the viewport
+  const trigger = window.scrollY + window.innerHeight * 0.35;
+  let current   = 'home';
+
+  sectionIds.forEach(id => {
+    const el = document.getElementById(id);
+    if (el && el.offsetTop <= trigger) current = id;
+  });
+
+  // Remove .active from all links, then apply to the current one
+  Object.values(linkMap).forEach(link => { if (link) link.classList.remove('active'); });
+  if (linkMap[current]) linkMap[current].classList.add('active');
+}
+
+updateActiveLink(); // run once immediately on page load
+
+
+/* ── 4. MOBILE HAMBURGER MENU ─────────────────────────────────────────
+   Toggles the mobile nav drawer open/closed. Also closes
+   the menu automatically when a link inside it is tapped.
+──────────────────────────────────────────────────────────────────────── */
+navToggle.addEventListener('click', () => {
+  const isOpen = navLinks.classList.toggle('open');
+  navToggle.classList.toggle('open', isOpen);
+  navToggle.setAttribute('aria-expanded', isOpen);
+});
+
+// Close mobile menu on any link tap (smooth UX)
+navLinks.querySelectorAll('a').forEach(a => {
+  a.addEventListener('click', () => {
+    navLinks.classList.remove('open');
+    navToggle.classList.remove('open');
+    navToggle.setAttribute('aria-expanded', false);
+  });
+});
+
+
+/* ── 5. SMOOTH SCROLL OFFSET ──────────────────────────────────────────
+   Native scroll-behavior:smooth is set in CSS. This JS layer ensures
+   the fixed navbar (64px) doesn't cover the section heading when a
+   nav link is clicked — it scrolls to the exact right position.
+──────────────────────────────────────────────────────────────────────── */
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+  anchor.addEventListener('click', function(e) {
+    const targetId = this.getAttribute('href').slice(1); // strip the #
+    const target   = document.getElementById(targetId);
+    if (!target) return;                                 // skip if no match
+
+    e.preventDefault();
+
+    const navHeight = 64;   // matches --nav-h in CSS
+    const targetTop = target.getBoundingClientRect().top + window.scrollY - navHeight - 8;
+
+    window.scrollTo({
+      top:      targetTop,
+      behavior: 'smooth'   // silky smooth, guaranteed
+    });
+  });
+/* ── 6. CONTACT FORM ────────────────────────────────────────────────────
+   Handles: live character counter, basic validation, simulated
+   submit with spinner, popup show/hide, and form reset.
+──────────────────────────────────────────────────────────────────────── */
+
+const form          = document.getElementById('contactForm');
+const nameInput     = document.getElementById('cf-name');
+const emailInput    = document.getElementById('cf-email');
+const msgInput      = document.getElementById('cf-message');
+const charCounter   = document.getElementById('charCounter');
+const submitBtn     = document.getElementById('submitBtn');
+const popupBackdrop = document.getElementById('popupBackdrop');
+const popupClose    = document.getElementById('popupClose');
+const popupX        = document.getElementById('popupX');
+
+/* Live character counter for the message textarea */
+msgInput.addEventListener('input', () => {
+  const len = msgInput.value.length;
+  const max = parseInt(msgInput.getAttribute('maxlength'), 10);
+  charCounter.textContent = `${len} / ${max}`;
+
+  // Colour-code the counter as it approaches the limit
+  charCounter.className = 'char-counter';
+  if (len >= max)        charCounter.classList.add('over');
+  else if (len >= max * 0.85) charCounter.classList.add('warn');
+});
+
+/* Simple client-side validation helper */
+function isValidEmail(val) {
+  /* Basic email pattern: something@something.something */
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val.trim());
+}
+
+function showError(input, msg) {
+  /* Add red border and a small error message below the field */
+  input.style.borderColor = '#ef4444';
+  input.style.boxShadow   = '0 0 0 3px rgba(239,68,68,0.12)';
+  // Remove any previous error message
+  const prev = input.parentNode.querySelector('.field-error');
+  if (prev) prev.remove();
+  const err = document.createElement('p');
+  err.className   = 'field-error';
+  err.textContent = msg;
+  err.style.cssText = 'font-size:12px;color:#ef4444;margin-top:5px;';
+  input.parentNode.appendChild(err);
+}
+
+function clearError(input) {
+  input.style.borderColor = '';
+  input.style.boxShadow   = '';
+  const prev = input.parentNode.querySelector('.field-error');
+  if (prev) prev.remove();
+}
+
+/* Clear errors as user starts typing again */
+[nameInput, emailInput, msgInput].forEach(input => {
+  input.addEventListener('input', () => clearError(input));
+});
+
+/* Form submit handler */
+form.addEventListener('submit', (e) => {
+  e.preventDefault(); // stop page reload
+
+  /* ── Validate ── */
+  let valid = true;
+
+  if (nameInput.value.trim().length < 2) {
+    showError(nameInput, 'Please enter your full name (at least 2 characters).');
+    valid = false;
+  } else { clearError(nameInput); }
+
+  if (!isValidEmail(emailInput.value)) {
+    showError(emailInput, 'Please enter a valid email address.');
+    valid = false;
+  } else { clearError(emailInput); }
+
+  if (msgInput.value.trim().length < 10) {
+    showError(msgInput, 'Please write a message (at least 10 characters).');
+    valid = false;
+  } else { clearError(msgInput); }
+
+  if (!valid) return; // stop if any field is invalid
+
+  /* ── Simulate sending (spinner for 1.2s, then popup) ── */
+  submitBtn.classList.add('loading');
+
+  setTimeout(() => {
+    submitBtn.classList.remove('loading');
+
+    /* Show the success popup */
+    popupBackdrop.classList.add('show');
+    document.body.style.overflow = 'hidden'; // lock scroll while popup is open
+
+    /* Reset the form */
+    form.reset();
+    charCounter.textContent = '0 / 600';
+    charCounter.className   = 'char-counter';
+    [nameInput, emailInput, msgInput].forEach(clearError);
+  }, 1200);
+});
+
+/* ── Popup dismiss helpers ── */
+function closePopup() {
+  popupBackdrop.classList.remove('show');
+  document.body.style.overflow = ''; // restore scroll
+}
+
+popupClose.addEventListener('click', closePopup);
+popupX.addEventListener('click', closePopup);
+
+/* Close popup on backdrop click (clicking outside the card) */
+popupBackdrop.addEventListener('click', (e) => {
+  if (e.target === popupBackdrop) closePopup();
+});
+
+/* Close popup with Escape key */
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && popupBackdrop.classList.contains('show')) closePopup();
+});
+</script>
 </body>
 </html>
