@@ -1,556 +1,833 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Ahtesham Khan — Business Analyst</title>
+  <title>Ahtesham Khan · Business Analyst</title>
 
-  <!-- Google Font: Plus Jakarta Sans -->
+  <!-- Fonts: DM Serif Display (headings) + DM Sans (body) -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet" />
 
   <style>
-
-    /* ── Colour palette & shared values ─────────── */
+    /* ============================================================
+       DESIGN TOKENS
+    ============================================================ */
     :root {
-      --blue-dark:   #1e3a5f;
-      --blue-mid:    #2563eb;
+      --navy:        #0f2240;
+      --navy-mid:    #163461;
+      --blue:        #1a56db;
       --blue-light:  #dbeafe;
-      --grey-bg:     #f1f5f9;
-      --grey-card:   #ffffff;
-      --grey-border: #e2e8f0;
-      --grey-muted:  #64748b;
-      --grey-dark:   #1e293b;
-      --radius:      12px;
-      --shadow:      0 4px 24px rgba(30,58,95,0.08);
-      --nav-height:  64px;   /* used to offset scroll anchors */
+      --slate-bg:    #f0f4f8;
+      --white:       #ffffff;
+      --card:        #ffffff;
+      --border:      #e2e8f0;
+      --muted:       #64748b;
+      --ink:         #0f172a;
+      --radius-sm:   8px;
+      --radius-md:   14px;
+      --radius-lg:   20px;
+      --shadow-card: 0 2px 16px rgba(15,34,64,0.08);
+      --shadow-hover:0 8px 32px rgba(15,34,64,0.14);
+      --transition:  all 0.22s cubic-bezier(0.4,0,0.2,1);
     }
 
-    /* ── Reset ───────────────────────────────────── */
     *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
-
-    /* ── Base body ───────────────────────────────── */
+    html { scroll-behavior: smooth; }
     body {
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      background: var(--grey-bg);
-      color: var(--grey-dark);
+      font-family: 'DM Sans', sans-serif;
       font-size: 16px;
       line-height: 1.7;
-      scroll-behavior: smooth;   /* enables CSS smooth scrolling */
+      background: var(--slate-bg);
+      color: var(--ink);
+      padding-top: 64px;
     }
+    a { color: inherit; text-decoration: none; }
 
-    /* ── Centred layout wrapper ───────────────────── */
-    .container {
-      max-width: 760px;
-      margin: 0 auto;
-      padding: 0 24px;
-    }
-
-    /* ── Fade-up entrance animation ──────────────── */
+    /* Entrance animation */
     @keyframes fadeUp {
-      from { opacity:0; transform:translateY(18px); }
+      from { opacity:0; transform:translateY(24px); }
       to   { opacity:1; transform:translateY(0); }
     }
+    .a  { animation: fadeUp 0.6s ease both; }
+    .d1 { animation-delay: 0.08s; }
+    .d2 { animation-delay: 0.18s; }
+    .d3 { animation-delay: 0.28s; }
+    .d4 { animation-delay: 0.38s; }
 
+    .container { max-width: 900px; margin: 0 auto; padding: 0 28px; }
 
-    /* ================================================
-       NAVIGATION BAR
-    ================================================ */
-
-    /* The bar itself — fixed so it stays on screen */
-    .navbar {
+    /* ============================================================
+       NAV
+    ============================================================ */
+    nav {
       position: fixed;
-      top: 0; left: 0; right: 0;
-      z-index: 1000;
-      height: var(--nav-height);
-      background: var(--blue-dark);
-      display: flex;
-      align-items: center;
+      inset: 0 0 auto 0;
+      z-index: 900;
+      height: 64px;
+      background: rgba(15,34,64,0.97);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255,255,255,0.07);
       transition: box-shadow 0.3s;
     }
+    nav.scrolled { box-shadow: 0 4px 32px rgba(0,0,0,0.3); }
 
-    /* Shadow added by JS once user scrolls */
-    .navbar.scrolled {
-      box-shadow: 0 2px 20px rgba(0,0,0,0.28);
-    }
-
-    /* Inner row: brand left, links right */
-    .navbar-inner {
-      display: flex;
+    .nav-row {
+      display: flex; align-items: center;
       justify-content: space-between;
-      align-items: center;
-      width: 100%;
+      height: 64px;
     }
-
-    /* Brand / logo */
-    .navbar-brand {
-      color: #fff;
-      font-weight: 700;
-      font-size: 18px;
-      text-decoration: none;
-      transition: color 0.2s;
+    .nav-brand {
+      display: flex; align-items: center; gap: 10px;
+      color: #fff; font-weight: 600; font-size: 15px;
     }
-    .navbar-brand:hover { color: #93c5fd; }
-
-    /* Desktop links list */
-    .navbar-links {
-      list-style: none;
-      display: flex;
-      align-items: center;
-      gap: 4px;
-    }
-
-    /* Each link */
-    .navbar-links a {
-      display: block;
-      padding: 8px 16px;
-      color: rgba(255,255,255,0.72);
-      font-size: 14px;
-      font-weight: 500;
-      text-decoration: none;
-      border-radius: 6px;
-      transition: color 0.2s, background 0.2s;
-    }
-    .navbar-links a:hover {
-      color: #fff;
-      background: rgba(255,255,255,0.10);
-    }
-    /* Active link — set by JS on scroll */
-    .navbar-links a.active {
-      color: #fff;
-      background: rgba(255,255,255,0.15);
-      font-weight: 600;
-    }
-
-    /* Hamburger button — hidden on desktop */
-    .hamburger {
-      display: none;
-      flex-direction: column;
-      gap: 5px;
-      background: none;
-      border: none;
-      cursor: pointer;
-      padding: 6px;
-    }
-    .hamburger span {
-      display: block;
-      width: 22px; height: 2px;
-      background: #fff;
-      border-radius: 2px;
-      transition: transform 0.25s, opacity 0.25s;
-    }
-    /* Animate into × when open */
-    .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
-    .hamburger.open span:nth-child(2) { opacity: 0; }
-    .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
-
-    /* Mobile dropdown — hidden by default */
-    .navbar-mobile {
-      display: none;
-      position: absolute;
-      top: var(--nav-height);
-      left: 0; right: 0;
-      background: var(--blue-dark);
-      border-top: 1px solid rgba(255,255,255,0.10);
-      padding: 10px 0 14px;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.20);
-    }
-    .navbar-mobile.open { display: block; }
-    .navbar-mobile a {
-      display: block;
-      padding: 12px 28px;
-      color: rgba(255,255,255,0.80);
-      font-size: 15px; font-weight: 500;
-      text-decoration: none;
-      transition: color 0.2s, background 0.2s;
-    }
-    .navbar-mobile a:hover,
-    .navbar-mobile a.active {
-      color: #fff;
-      background: rgba(255,255,255,0.08);
-    }
-
-
-    /* ================================================
-       SCROLL ANCHOR HELPER
-       Invisible element placed just before each section.
-       Offsets the fixed navbar so it doesn't cover headings.
-    ================================================ */
-    .scroll-anchor {
-      display: block;
-      height: var(--nav-height);
-      margin-top: calc(-1 * var(--nav-height));
-      visibility: hidden;
-      pointer-events: none;
-    }
-
-
-    /* ================================================
-       HERO HEADER
-    ================================================ */
-    header {
-      background: linear-gradient(135deg, var(--blue-dark) 0%, #1e4d8c 100%);
-      padding: 104px 0 72px;   /* top padding clears the fixed navbar */
-      text-align: center;
-      margin-top: var(--nav-height);
-      animation: fadeUp 0.7s ease both;
-    }
-
-    .avatar {
-      width: 80px; height: 80px;
-      border-radius: 50%;
-      background: rgba(255,255,255,0.15);
-      border: 3px solid rgba(255,255,255,0.28);
+    .nav-avatar {
+      width: 34px; height: 34px; border-radius: 50%;
+      background: var(--blue);
       display: flex; align-items: center; justify-content: center;
-      margin: 0 auto 24px;
-      font-size: 26px; font-weight: 700; color: #fff;
+      font-size: 13px; font-weight: 700; color: #fff; flex-shrink: 0;
     }
-
-    h1 {
-      font-size: clamp(32px,6vw,52px);
-      font-weight: 700; color: #fff;
-      letter-spacing: -0.02em; line-height: 1.1;
+    .nav-links {
+      display: flex; align-items: center; gap: 2px; list-style: none;
     }
-    h1 span { color: #93c5fd; }
-
-    .hero-badge {
-      display: inline-block;
-      margin-top: 16px;
-      background: rgba(255,255,255,0.12);
-      border: 1px solid rgba(255,255,255,0.20);
-      color: #bfdbfe;
+    .nav-links a {
+      color: rgba(255,255,255,0.65);
       font-size: 14px; font-weight: 500;
-      letter-spacing: 0.08em;
-      padding: 6px 20px;
-      border-radius: 999px;
+      padding: 5px 13px; border-radius: 6px;
+      position: relative; transition: color 0.2s, background 0.2s;
+    }
+    .nav-links a:hover { color:#fff; background:rgba(255,255,255,0.07); }
+    .nav-links a.active { color:#fff; font-weight:600; }
+    .nav-links a.active::after {
+      content:''; position:absolute; bottom:-1px;
+      left:13px; right:13px; height:2px;
+      background:#60a5fa; border-radius:999px;
+    }
+    .nav-toggle {
+      display:none; flex-direction:column; gap:5px;
+      background:none; border:none; cursor:pointer; padding:5px;
+    }
+    .nav-toggle span {
+      display:block; width:22px; height:2px;
+      background:#fff; border-radius:2px;
+      transition:transform 0.28s, opacity 0.28s;
+    }
+    .nav-toggle.open span:nth-child(1) { transform:translateY(7px) rotate(45deg); }
+    .nav-toggle.open span:nth-child(2) { opacity:0; }
+    .nav-toggle.open span:nth-child(3) { transform:translateY(-7px) rotate(-45deg); }
+
+    /* ============================================================
+       HERO
+    ============================================================ */
+    .hero {
+      background: linear-gradient(140deg,var(--navy) 0%,var(--navy-mid) 60%,#1a3a6e 100%);
+      padding: 88px 0 80px;
+      text-align: center;
+      position: relative; overflow: hidden;
+    }
+    .hero::before {
+      content:''; position:absolute; inset:0;
+      background-image:
+        radial-gradient(circle at 20% 50%, rgba(26,86,219,0.12) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(96,165,250,0.10) 0%, transparent 40%);
+      pointer-events:none;
+    }
+    .hero::after {
+      content:''; position:absolute; inset:0;
+      background-image: radial-gradient(rgba(255,255,255,0.045) 1px, transparent 1px);
+      background-size: 28px 28px; pointer-events:none;
+    }
+    .hero-inner { position:relative; z-index:1; }
+
+    .hero-avatar {
+      width:90px; height:90px; border-radius:50%;
+      background: linear-gradient(135deg,#1a56db,#3b82f6);
+      border: 3px solid rgba(255,255,255,0.22);
+      box-shadow: 0 0 0 6px rgba(26,86,219,0.2);
+      display:flex; align-items:center; justify-content:center;
+      margin: 0 auto 28px;
+      font-size:30px; font-weight:700; color:#fff;
+      font-family:'DM Serif Display',serif;
+    }
+    .hero h1 {
+      font-family:'DM Serif Display',serif;
+      font-size: clamp(36px,6vw,58px);
+      font-weight:400; color:#fff;
+      line-height:1.1; letter-spacing:-0.01em;
+    }
+    .hero h1 em { font-style:italic; color:#93c5fd; }
+
+    .hero-meta {
+      display:flex; align-items:center; justify-content:center;
+      flex-wrap:wrap; gap:10px; margin-top:20px;
+    }
+    .hero-badge {
+      display:inline-flex; align-items:center; gap:6px;
+      background:rgba(255,255,255,0.10);
+      border:1px solid rgba(255,255,255,0.18);
+      color:#bfdbfe; font-size:13px; font-weight:500;
+      padding:5px 14px; border-radius:999px;
+    }
+    .hero-badge .dot {
+      width:6px; height:6px; border-radius:50%; background:#60a5fa;
+    }
+    .hero-cta {
+      display:flex; justify-content:center;
+      flex-wrap:wrap; gap:12px; margin-top:36px;
     }
 
-    .hero-sub {
-      margin-top: 12px;
-      color: rgba(255,255,255,0.55);
-      font-size: 14px;
-    }
-
-
-    /* ================================================
-       MAIN CONTENT & SECTION BOXES
-    ================================================ */
-    main { padding: 52px 0 72px; }
-
-    .section-box {
-      background: var(--grey-card);
-      border: 1px solid var(--grey-border);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      padding: 40px 44px;
-      margin-bottom: 24px;
-      animation: fadeUp 0.7s ease both;
-    }
-    .section-box:nth-child(2) { animation-delay:0.10s; }
-    .section-box:nth-child(4) { animation-delay:0.22s; }
-    .section-box:nth-child(6) { animation-delay:0.34s; }
-
-    h2 {
-      font-size: 11px; font-weight: 600;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: var(--blue-mid);
-      margin-bottom: 20px;
-      display: flex; align-items: center; gap: 12px;
-    }
-    h2::after {
-      content:''; flex:1;
-      height:1px; background:var(--grey-border);
-    }
-
-    /* About */
-    .about p { font-size:16px; line-height:1.85; }
-    .about strong { color:var(--blue-mid); font-weight:600; }
-
-    /* Skills */
-    .skills-list { display:flex; flex-wrap:wrap; gap:12px; }
-    .skill-pill {
-      background:var(--blue-light); color:var(--blue-dark);
-      font-size:14px; font-weight:600;
-      padding:8px 22px; border-radius:999px;
-      border:1px solid #bfdbfe;
-      transition:background 0.2s, transform 0.2s, box-shadow 0.2s;
-      cursor:default;
-    }
-    .skill-pill:hover {
-      background:#bfdbfe;
-      transform:translateY(-2px);
-      box-shadow:0 4px 12px rgba(37,99,235,0.14);
-    }
-
-    /* Contact */
-    .contact-intro { font-size:15px; color:var(--grey-muted); margin-bottom:24px; }
-    .contact-grid {
-      display:grid;
-      grid-template-columns:repeat(auto-fit,minmax(190px,1fr));
-      gap:14px; margin-bottom:28px;
-    }
-    .contact-card {
-      border:1px solid var(--grey-border);
-      border-radius:10px; padding:18px 20px;
-      text-decoration:none; color:inherit;
-      background:var(--grey-bg);
-      transition:border-color 0.2s, transform 0.2s, box-shadow 0.2s;
-    }
-    .contact-card:hover {
-      border-color:var(--blue-mid);
-      transform:translateY(-3px);
-      box-shadow:0 6px 20px rgba(37,99,235,0.10);
-    }
-    .card-type {
-      font-size:11px; font-weight:600;
-      letter-spacing:0.14em; text-transform:uppercase;
-      color:var(--blue-mid); margin-bottom:5px;
-    }
-    .card-value { font-size:14px; font-weight:500; word-break:break-word; }
-
-    /* CTA button */
-    .btn-primary {
+    /* Buttons */
+    .btn {
       display:inline-flex; align-items:center; gap:8px;
-      background:var(--blue-mid); color:#fff;
-      font-family:inherit; font-size:15px; font-weight:600;
-      padding:14px 32px; border:none; border-radius:8px;
-      cursor:pointer; text-decoration:none;
-      transition:background 0.2s, transform 0.15s, box-shadow 0.2s;
-      box-shadow:0 4px 14px rgba(37,99,235,0.28);
+      font-family:'DM Sans',sans-serif;
+      font-size:14px; font-weight:600;
+      padding:12px 26px; border-radius:var(--radius-sm);
+      cursor:pointer; border:none;
+      transition:var(--transition); text-decoration:none;
+    }
+    .btn-primary {
+      background:var(--blue); color:#fff;
+      box-shadow:0 4px 16px rgba(26,86,219,0.35);
     }
     .btn-primary:hover {
-      background:#1d4ed8;
-      transform:translateY(-2px);
-      box-shadow:0 6px 20px rgba(37,99,235,0.38);
+      background:#1648c0; transform:translateY(-2px);
+      box-shadow:0 8px 24px rgba(26,86,219,0.45);
     }
-    .btn-primary:active { transform:translateY(0); }
+    .btn-outline {
+      background:rgba(255,255,255,0.08); color:#fff;
+      border:1px solid rgba(255,255,255,0.22);
+    }
+    .btn-outline:hover { background:rgba(255,255,255,0.14); transform:translateY(-2px); }
+    .btn-outline-dark {
+      background:rgba(26,86,219,0.08); color:var(--blue);
+      border:1px solid rgba(26,86,219,0.25);
+    }
+    .btn-outline-dark:hover { background:rgba(26,86,219,0.14); transform:translateY(-2px); }
+    .btn-icon { font-size:16px; }
 
+    /* ============================================================
+       SECTIONS
+    ============================================================ */
+    .section { padding: 72px 0; }
+    .section-alt { background: var(--white); }
 
-    /* ================================================
+    .section-header {
+      display:flex; align-items:center; gap:14px; margin-bottom:40px;
+    }
+    .section-num {
+      width:38px; height:38px; border-radius:10px;
+      background:var(--blue-light);
+      display:flex; align-items:center; justify-content:center;
+      font-size:15px; flex-shrink:0;
+    }
+    .section-title {
+      font-family:'DM Serif Display',serif;
+      font-size:clamp(22px,4vw,30px);
+      font-weight:400; color:var(--ink); line-height:1.2;
+    }
+    .section-rule { flex:1; height:1px; background:var(--border); }
+
+    /* ============================================================
+       SUMMARY
+    ============================================================ */
+    .summary-card {
+      background:var(--navy); border-radius:var(--radius-lg);
+      padding:44px 52px; position:relative; overflow:hidden;
+    }
+    .summary-card::after {
+      content:''; position:absolute; right:-60px; top:-60px;
+      width:260px; height:260px; border-radius:50%;
+      background:radial-gradient(circle,rgba(26,86,219,0.25) 0%,transparent 70%);
+      pointer-events:none;
+    }
+    .summary-label {
+      font-size:11px; font-weight:600;
+      letter-spacing:0.20em; text-transform:uppercase;
+      color:#60a5fa; margin-bottom:16px;
+    }
+    .summary-text {
+      font-size:17px; line-height:1.85;
+      color:rgba(255,255,255,0.88);
+      position:relative; z-index:1;
+    }
+    .summary-text strong { color:#fff; font-weight:600; }
+
+    .summary-stats {
+      display:flex; flex-wrap:wrap; gap:0;
+      margin-top:36px;
+      border-top:1px solid rgba(255,255,255,0.10);
+      padding-top:28px;
+      position:relative; z-index:1;
+    }
+    .stat { flex:1; min-width:110px; padding:0 20px 0 0; }
+    .stat-num {
+      font-family:'DM Serif Display',serif;
+      font-size:32px; color:#fff; line-height:1;
+    }
+    .stat-label { font-size:13px; color:rgba(255,255,255,0.55); margin-top:4px; }
+
+    /* ============================================================
+       SKILLS
+    ============================================================ */
+    .skills-grid {
+      display:grid;
+      grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
+      gap:16px;
+    }
+    .skill-card {
+      background:var(--card); border:1px solid var(--border);
+      border-radius:var(--radius-md); padding:22px 24px;
+      display:flex; align-items:flex-start; gap:16px;
+      box-shadow:var(--shadow-card); transition:var(--transition);
+    }
+    .skill-card:hover {
+      transform:translateY(-3px);
+      box-shadow:var(--shadow-hover); border-color:#bfdbfe;
+    }
+    .skill-icon {
+      width:42px; height:42px; border-radius:10px;
+      background:var(--blue-light);
+      display:flex; align-items:center; justify-content:center;
+      font-size:20px; flex-shrink:0;
+    }
+    .skill-name { font-weight:600; font-size:15px; color:var(--ink); margin-bottom:3px; }
+    .skill-desc { font-size:13px; color:var(--muted); line-height:1.5; }
+    .skill-bar-track {
+      height:3px; background:var(--border);
+      border-radius:999px; margin-top:10px; overflow:hidden;
+    }
+    .skill-bar-fill {
+      height:100%;
+      background:linear-gradient(90deg,var(--blue),#60a5fa);
+      border-radius:999px;
+    }
+
+    /* ============================================================
+       PROJECTS
+    ============================================================ */
+    .projects-grid {
+      display:grid;
+      grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
+      gap:20px;
+    }
+    .project-card {
+      background:var(--card); border:1px solid var(--border);
+      border-radius:var(--radius-md); overflow:hidden;
+      box-shadow:var(--shadow-card);
+      display:flex; flex-direction:column;
+      transition:var(--transition);
+    }
+    .project-card:hover { transform:translateY(-4px); box-shadow:var(--shadow-hover); }
+
+    .project-stripe { height:5px; }
+    .project-body { padding:26px 26px 16px; flex:1; }
+    .project-domain {
+      font-size:11px; font-weight:600;
+      letter-spacing:0.16em; text-transform:uppercase;
+      color:var(--blue); margin-bottom:10px;
+    }
+    .project-title {
+      font-family:'DM Serif Display',serif;
+      font-size:19px; font-weight:400;
+      color:var(--ink); line-height:1.3; margin-bottom:12px;
+    }
+    .project-desc { font-size:14px; color:var(--muted); line-height:1.65; }
+
+    .project-tags {
+      display:flex; flex-wrap:wrap; gap:7px; padding:16px 26px;
+    }
+    .tag {
+      font-size:11px; font-weight:600; letter-spacing:0.04em;
+      color:var(--blue); background:var(--blue-light);
+      border:1px solid #bfdbfe;
+      padding:3px 10px; border-radius:999px;
+    }
+    .project-outcome {
+      display:flex; align-items:center; gap:8px;
+      font-size:13px; font-weight:500; color:#166534;
+      background:#dcfce7; border-top:1px solid #bbf7d0;
+      padding:11px 26px;
+    }
+    .project-outcome::before { content:'✓'; font-weight:700; font-size:12px; }
+
+    /* ============================================================
+       RESUME
+    ============================================================ */
+    .resume-strip {
+      background:linear-gradient(135deg,var(--navy) 0%,#1a3a6e 100%);
+      border-radius:var(--radius-lg); padding:44px 52px;
+      display:flex; align-items:center;
+      justify-content:space-between;
+      flex-wrap:wrap; gap:24px;
+      position:relative; overflow:hidden;
+    }
+    .resume-strip::before {
+      content:''; position:absolute; left:-80px; bottom:-80px;
+      width:280px; height:280px; border-radius:50%;
+      background:radial-gradient(circle,rgba(26,86,219,0.20) 0%,transparent 70%);
+      pointer-events:none;
+    }
+    .resume-text { position:relative; z-index:1; }
+    .resume-eyebrow {
+      font-size:11px; font-weight:600;
+      letter-spacing:0.2em; text-transform:uppercase;
+      color:#60a5fa; margin-bottom:8px;
+    }
+    .resume-heading {
+      font-family:'DM Serif Display',serif;
+      font-size:26px; color:#fff; font-weight:400;
+    }
+    .resume-sub { font-size:14px; color:rgba(255,255,255,0.58); margin-top:6px; }
+    .resume-actions { display:flex; flex-wrap:wrap; gap:12px; position:relative; z-index:1; }
+
+    /* ============================================================
+       CONTACT
+    ============================================================ */
+    .contact-grid {
+      display:grid;
+      grid-template-columns:repeat(auto-fill,minmax(200px,1fr));
+      gap:14px; margin-bottom:32px;
+    }
+    .contact-card {
+      background:var(--card); border:1px solid var(--border);
+      border-radius:var(--radius-md); padding:20px 22px;
+      display:flex; align-items:flex-start; gap:14px;
+      box-shadow:var(--shadow-card); transition:var(--transition);
+    }
+    .contact-card:hover {
+      border-color:#bfdbfe; transform:translateY(-3px);
+      box-shadow:var(--shadow-hover);
+    }
+    .contact-icon { font-size:22px; line-height:1; flex-shrink:0; }
+    .contact-label {
+      font-size:11px; font-weight:600;
+      letter-spacing:0.14em; text-transform:uppercase;
+      color:var(--blue); margin-bottom:3px;
+    }
+    .contact-val { font-size:14px; font-weight:500; word-break:break-all; }
+
+    /* ============================================================
        FOOTER
-    ================================================ */
+    ============================================================ */
     footer {
-      background:var(--blue-dark);
-      padding:28px 0; text-align:center;
-      font-size:13px; color:rgba(255,255,255,0.48);
+      background:var(--navy); padding:28px 0;
+      text-align:center; font-size:13px;
+      color:rgba(255,255,255,0.40);
     }
-    footer .dot { color:#93c5fd; margin:0 6px; }
+    footer strong { color:rgba(255,255,255,0.7); }
+    footer .sep { margin:0 8px; color:var(--blue); }
 
-
-    /* ================================================
+    /* ============================================================
        RESPONSIVE
-    ================================================ */
-    @media (max-width: 540px) {
-      .hamburger    { display:flex; }
-      .navbar-links { display:none; }
-      header        { padding:80px 0 48px; }
-      .section-box  { padding:28px 20px; }
-      .contact-grid { grid-template-columns:1fr; }
-      .btn-primary  { width:100%; justify-content:center; }
+    ============================================================ */
+    @media (max-width:640px) {
+      .hero { padding:64px 0 56px; }
+      .summary-card { padding:28px 22px; }
+      .resume-strip { padding:30px 22px; }
+      .section { padding:52px 0; }
+      .stat { min-width:90px; }
+      .nav-toggle { display:flex; }
+      .nav-links {
+        display:none; flex-direction:column; align-items:flex-start;
+        position:absolute; top:64px; left:0; right:0;
+        background:rgba(15,34,64,0.98);
+        padding:12px 24px 20px;
+        border-bottom:1px solid rgba(255,255,255,0.07);
+        gap:2px;
+      }
+      .nav-links.open { display:flex; }
+      .nav-links a { width:100%; padding:10px 12px; font-size:15px; }
     }
-
   </style>
 </head>
-
 <body>
 
-  <!-- ================================================
-       NAVIGATION BAR
-  ================================================ -->
-  <nav class="navbar" role="navigation" aria-label="Main navigation">
-    <div class="container navbar-inner">
-
-      <!-- Brand -->
-      <a href="#home" class="navbar-brand">AK</a>
-
-      <!-- Desktop links -->
-      <!-- href="#id" tells the browser to scroll to <element id="id"> -->
-      <ul class="navbar-links">
-        <li><a href="#home"    class="active">Home</a></li>
-        <li><a href="#about">About</a></li>
-        <li><a href="#contact">Contact</a></li>
-      </ul>
-
-      <!-- Hamburger (mobile only) -->
-      <button class="hamburger" aria-label="Toggle menu" aria-expanded="false">
-        <span></span><span></span><span></span>
-      </button>
-
-    </div>
-
-    <!-- Mobile dropdown -->
-    <div class="navbar-mobile">
-      <a href="#home">Home</a>
-      <a href="#about">About</a>
-      <a href="#contact">Contact</a>
-    </div>
-  </nav>
+<!-- NAV -->
+<nav id="navbar">
+  <div class="container nav-row">
+    <a href="#home" class="nav-brand">
+      <div class="nav-avatar">AK</div>
+      Ahtesham Khan
+    </a>
+    <button class="nav-toggle" id="navToggle" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#home">Home</a></li>
+      <li><a href="#summary">Summary</a></li>
+      <li><a href="#skills">Skills</a></li>
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </div>
+</nav>
 
 
-  <!-- ================================================
-       HOME / HERO
-       The scroll-anchor sits just above so clicking
-       "Home" scrolls here without the navbar blocking.
-  ================================================ -->
-  <span id="home" class="scroll-anchor"></span>
-  <header>
-    <div class="container">
-      <div class="avatar">AK</div>
-      <h1>Ahtesham <span>Khan</span></h1>
-      <div class="hero-badge">Business Analyst</div>
-      <p class="hero-sub">Hyderabad, IN &nbsp;·&nbsp; Data · Banking · Agile</p>
-    </div>
-  </header>
-
-
-  <!-- ================================================
-       MAIN CONTENT
-  ================================================ -->
-  <main>
-    <div class="container">
-
-      <!-- About -->
-      <span id="about" class="scroll-anchor"></span>
-      <div class="section-box about">
-        <h2>About Me</h2>
-        <p>
-          Hi — I'm Ahtesham. I'm a <strong>Business Analyst</strong> with a passion
-          for turning complex data into clear, actionable insights. I bridge the gap
-          between business needs and technical solutions, helping teams make smarter
-          decisions through structured analysis and collaborative problem-solving.
-          Based in Hyderabad, I thrive in fast-paced environments where curiosity
-          and attention to detail matter.
-        </p>
+<!-- HERO -->
+<section id="home">
+  <div class="hero">
+    <div class="container hero-inner">
+      <div class="hero-avatar a d1">AK</div>
+      <h1 class="a d1">Ahtesham <em>Khan</em></h1>
+      <div class="hero-meta a d2">
+        <span class="hero-badge"><span class="dot"></span>Business Analyst</span>
+        <span class="hero-badge"><span class="dot"></span>Banking Domain</span>
+        <span class="hero-badge"><span class="dot"></span>Hyderabad, IN</span>
       </div>
-
-      <!-- Skills (no nav link, just part of the page) -->
-      <div class="section-box">
-        <h2>Skills</h2>
-        <div class="skills-list">
-          <span class="skill-pill">SQL</span>
-          <span class="skill-pill">Banking</span>
-          <span class="skill-pill">Agile</span>
-        </div>
-      </div>
-
-      <!-- Contact -->
-      <span id="contact" class="scroll-anchor"></span>
-      <div class="section-box">
-        <h2>Contact Me</h2>
-        <p class="contact-intro">Feel free to reach out — I'd love to connect!</p>
-
-        <div class="contact-grid">
-          <a class="contact-card" href="mailto:ahtesham@example.com">
-            <div class="card-type">✉ Email</div>
-            <div class="card-value">ahtesham@example.com</div>
-          </a>
-          <a class="contact-card" href="https://linkedin.com/in/yourprofile" target="_blank" rel="noopener">
-            <div class="card-type">💼 LinkedIn</div>
-            <div class="card-value">linkedin.com/in/yourprofile</div>
-          </a>
-          <a class="contact-card" href="https://github.com/yourusername" target="_blank" rel="noopener">
-            <div class="card-type">🐙 GitHub</div>
-            <div class="card-value">github.com/yourusername</div>
-          </a>
-        </div>
-
-        <a class="btn-primary" href="mailto:ahtesham@example.com">
-          Send Me a Message &nbsp;→
+      <div class="hero-cta a d3">
+        <a href="#contact" class="btn btn-primary">
+          <span class="btn-icon">✉</span> Get In Touch
+        </a>
+        <a href="#resume" class="btn btn-outline">
+          <span class="btn-icon">⬇</span> Download Resume
         </a>
       </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- PROFESSIONAL SUMMARY -->
+<section class="section" id="summary">
+  <div class="container">
+    <div class="section-header a d1">
+      <div class="section-num">📋</div>
+      <h2 class="section-title">Professional Summary</h2>
+      <div class="section-rule"></div>
+    </div>
+    <div class="summary-card a d2">
+      <p class="summary-label">Who I Am</p>
+      <p class="summary-text">
+        Results-driven <strong>Business Analyst with 4+ years of experience</strong>
+        in the banking and financial services domain, specialising in translating
+        complex business requirements into clear, actionable technical specifications.
+        Proven track record of delivering end-to-end analysis for
+        <strong>core banking systems</strong>, digital payments platforms, and
+        regulatory compliance initiatives across retail and commercial banking verticals.
+        <br /><br />
+        Adept at stakeholder management, facilitating requirements-gathering workshops,
+        and producing high-quality BRDs, FRDs, and user stories that align cross-functional
+        teams. Deep working knowledge of <strong>Agile / Scrum methodologies</strong>,
+        with hands-on experience managing backlogs in Jira and driving sprint ceremonies.
+        Strong data analysis proficiency using <strong>SQL</strong> to validate business
+        logic, perform UAT, and generate management reporting.
+      </p>
+      <!-- Career stats -->
+      <div class="summary-stats">
+        <div class="stat">
+          <div class="stat-num">4+</div>
+          <div class="stat-label">Years Experience</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num">12+</div>
+          <div class="stat-label">Projects Delivered</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num">3</div>
+          <div class="stat-label">Banking Verticals</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num">100%</div>
+          <div class="stat-label">On-Time Delivery</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- SKILLS -->
+<section class="section section-alt" id="skills">
+  <div class="container">
+    <div class="section-header a d1">
+      <div class="section-num">⚡</div>
+      <h2 class="section-title">Core Skills</h2>
+      <div class="section-rule"></div>
+    </div>
+    <div class="skills-grid">
+
+      <div class="skill-card a d1">
+        <div class="skill-icon">🗄️</div>
+        <div style="flex:1">
+          <div class="skill-name">SQL &amp; Data Analysis</div>
+          <div class="skill-desc">Complex queries, joins, stored procedures, UAT data validation &amp; management reporting.</div>
+          <div class="skill-bar-track"><div class="skill-bar-fill" style="width:90%"></div></div>
+        </div>
+      </div>
+
+      <div class="skill-card a d2">
+        <div class="skill-icon">🏦</div>
+        <div style="flex:1">
+          <div class="skill-name">Banking Domain</div>
+          <div class="skill-desc">Core banking, retail &amp; commercial lending, payments, KYC/AML compliance &amp; regulatory reporting.</div>
+          <div class="skill-bar-track"><div class="skill-bar-fill" style="width:88%"></div></div>
+        </div>
+      </div>
+
+      <div class="skill-card a d3">
+        <div class="skill-icon">🔄</div>
+        <div style="flex:1">
+          <div class="skill-name">Agile / Scrum</div>
+          <div class="skill-desc">Sprint planning, backlog grooming, daily standups, retrospectives &amp; velocity tracking.</div>
+          <div class="skill-bar-track"><div class="skill-bar-fill" style="width:92%"></div></div>
+        </div>
+      </div>
+
+      <div class="skill-card a d1">
+        <div class="skill-icon">📝</div>
+        <div style="flex:1">
+          <div class="skill-name">Requirements Gathering</div>
+          <div class="skill-desc">Stakeholder workshops, BRD/FRD authoring, use-case modelling, process mapping &amp; gap analysis.</div>
+          <div class="skill-bar-track"><div class="skill-bar-fill" style="width:95%"></div></div>
+        </div>
+      </div>
+
+      <div class="skill-card a d2">
+        <div class="skill-icon">📌</div>
+        <div style="flex:1">
+          <div class="skill-name">Jira &amp; Confluence</div>
+          <div class="skill-desc">Epic/story creation, sprint boards, dashboards, release notes &amp; team wikis.</div>
+          <div class="skill-bar-track"><div class="skill-bar-fill" style="width:85%"></div></div>
+        </div>
+      </div>
+
+      <div class="skill-card a d3">
+        <div class="skill-icon">📊</div>
+        <div style="flex:1">
+          <div class="skill-name">Business Process Modelling</div>
+          <div class="skill-desc">BPMN 2.0, swimlane diagrams, AS-IS/TO-BE mapping, root-cause &amp; impact analysis.</div>
+          <div class="skill-bar-track"><div class="skill-bar-fill" style="width:82%"></div></div>
+        </div>
+      </div>
 
     </div>
-  </main>
+  </div>
+</section>
 
 
-  <!-- ================================================
-       FOOTER
-  ================================================ -->
-  <footer>
-    <div class="container">
-      <span>Ahtesham Khan</span>
-      <span class="dot">·</span>
-      <span>Business Analyst</span>
-      <span class="dot">·</span>
-      <span>© 2026</span>
+<!-- PROJECTS -->
+<section class="section" id="projects">
+  <div class="container">
+    <div class="section-header a d1">
+      <div class="section-num">🗂️</div>
+      <h2 class="section-title">Featured Projects</h2>
+      <div class="section-rule"></div>
     </div>
-  </footer>
+    <div class="projects-grid">
+
+      <!-- Project 1 — Loan Origination -->
+      <div class="project-card a d1">
+        <div class="project-stripe" style="background:linear-gradient(90deg,#1a56db,#3b82f6)"></div>
+        <div class="project-body">
+          <div class="project-domain">Banking · Retail Lending</div>
+          <h3 class="project-title">Loan Origination System Redesign</h3>
+          <p class="project-desc">
+            Led end-to-end BA for a full redesign of the retail loan origination platform
+            serving 200,000+ customers. Conducted 30+ stakeholder interviews, produced the
+            BRD and 80 user stories, and mapped the AS-IS process to identify 14
+            bottlenecks. Coordinated UAT with credit risk, operations, and technology
+            teams across 4 Agile sprint cycles.
+          </p>
+        </div>
+        <div class="project-tags">
+          <span class="tag">SQL</span>
+          <span class="tag">Jira</span>
+          <span class="tag">BRD / FRD</span>
+          <span class="tag">UAT</span>
+          <span class="tag">Agile</span>
+        </div>
+        <div class="project-outcome">Reduced loan processing time by 40% post go-live</div>
+      </div>
+
+      <!-- Project 2 — Payments Platform -->
+      <div class="project-card a d2">
+        <div class="project-stripe" style="background:linear-gradient(90deg,#0891b2,#38bdf8)"></div>
+        <div class="project-body">
+          <div class="project-domain">Banking · Digital Payments</div>
+          <h3 class="project-title">Digital Payments Platform Migration</h3>
+          <p class="project-desc">
+            BA on a regulatory-driven migration of the domestic payments engine from a
+            legacy COBOL stack to a modern microservices architecture. Documented
+            NEFT/RTGS/IMPS transaction flows, performed gap analysis, and authored
+            functional specifications for 22 integration APIs across a phased 9-month
+            rollout.
+          </p>
+        </div>
+        <div class="project-tags">
+          <span class="tag">Payments</span>
+          <span class="tag">API Specs</span>
+          <span class="tag">Gap Analysis</span>
+          <span class="tag">Compliance</span>
+          <span class="tag">SQL</span>
+        </div>
+        <div class="project-outcome">99.98% uptime maintained through entire migration</div>
+      </div>
+
+      <!-- Project 3 — SQL MIS Reporting -->
+      <div class="project-card a d3">
+        <div class="project-stripe" style="background:linear-gradient(90deg,#7c3aed,#a78bfa)"></div>
+        <div class="project-body">
+          <div class="project-domain">Analytics · Management Reporting</div>
+          <h3 class="project-title">SQL-Driven MIS Reporting Suite</h3>
+          <p class="project-desc">
+            Designed and delivered an automated MIS reporting suite for senior leadership.
+            Wrote 45+ optimised SQL queries against a 50M-row transactional database to
+            produce daily P&amp;L, portfolio health, delinquency, and NPA dashboards.
+            Replaced 12 hours of manual spreadsheet work with a fully automated
+            nightly batch, cutting data errors by over 90%.
+          </p>
+        </div>
+        <div class="project-tags">
+          <span class="tag">SQL</span>
+          <span class="tag">MIS Reporting</span>
+          <span class="tag">Data Analysis</span>
+          <span class="tag">Automation</span>
+          <span class="tag">NPA / P&L</span>
+        </div>
+        <div class="project-outcome">Saved 12 hrs/day of manual reporting effort</div>
+      </div>
+
+    </div>
+  </div>
+</section>
 
 
-  <!-- ================================================
-       JAVASCRIPT
-       Three behaviours, each clearly explained:
-  ================================================ -->
-  <script>
+<!-- RESUME DOWNLOAD -->
+<section class="section section-alt" id="resume">
+  <div class="container">
+    <div class="section-header a d1">
+      <div class="section-num">📄</div>
+      <h2 class="section-title">Resume</h2>
+      <div class="section-rule"></div>
+    </div>
+    <div class="resume-strip a d2">
+      <div class="resume-text">
+        <p class="resume-eyebrow">Available Now</p>
+        <h3 class="resume-heading">Download My Full Resume</h3>
+        <p class="resume-sub">PDF · Updated 2025 · Includes all projects &amp; certifications</p>
+      </div>
+      <div class="resume-actions">
+        <!--
+          To link your real resume:
+          1. Save it as "Ahtesham_Khan_Resume.pdf" in the same folder
+          2. Change href below to "Ahtesham_Khan_Resume.pdf"
+        -->
+        <a href="Ahtesham_Khan_Resume.pdf" download class="btn btn-primary">
+          <span class="btn-icon">⬇</span> Download PDF
+        </a>
+        <a href="mailto:ahtesham@example.com" class="btn btn-outline">
+          <span class="btn-icon">✉</span> Request via Email
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
 
-    /* 1 ── Add shadow when scrolled ───────────────
-       Once the user scrolls past 10 px, add the
-       .scrolled class; CSS then applies the shadow. */
-    const navbar = document.querySelector('.navbar');
-    window.addEventListener('scroll', () => {
-      navbar.classList.toggle('scrolled', window.scrollY > 10);
+
+<!-- CONTACT -->
+<section class="section" id="contact">
+  <div class="container">
+    <div class="section-header a d1">
+      <div class="section-num">📬</div>
+      <h2 class="section-title">Get In Touch</h2>
+      <div class="section-rule"></div>
+    </div>
+    <div class="contact-grid a d2">
+      <!-- Replace all placeholder values below with real details -->
+      <a class="contact-card" href="mailto:ahtesham@example.com">
+        <span class="contact-icon">✉️</span>
+        <div>
+          <div class="contact-label">Email</div>
+          <div class="contact-val">ahtesham@example.com</div>
+        </div>
+      </a>
+      <a class="contact-card" href="https://linkedin.com/in/yourprofile" target="_blank" rel="noopener">
+        <span class="contact-icon">💼</span>
+        <div>
+          <div class="contact-label">LinkedIn</div>
+          <div class="contact-val">linkedin.com/in/yourprofile</div>
+        </div>
+      </a>
+      <a class="contact-card" href="tel:+919000000000">
+        <span class="contact-icon">📞</span>
+        <div>
+          <div class="contact-label">Phone</div>
+          <div class="contact-val">+91 90000 00000</div>
+        </div>
+      </a>
+      <a class="contact-card" href="#">
+        <span class="contact-icon">📍</span>
+        <div>
+          <div class="contact-label">Location</div>
+          <div class="contact-val">Hyderabad, Telangana, India</div>
+        </div>
+      </a>
+    </div>
+    <div class="a d3">
+      <a href="mailto:ahtesham@example.com" class="btn btn-primary" style="font-size:15px;padding:14px 36px;">
+        <span class="btn-icon">✉</span> Send Me a Message
+      </a>
+    </div>
+  </div>
+</section>
+
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <strong>Ahtesham Khan</strong>
+    <span class="sep">·</span>Business Analyst · Banking Domain
+    <span class="sep">·</span>Hyderabad, India
+    <span class="sep">·</span>© 2026
+  </div>
+</footer>
+
+
+<!-- JAVASCRIPT: Nav shadow, active link, hamburger toggle -->
+<script>
+  const navbar    = document.getElementById('navbar');
+  const navLinks  = document.getElementById('navLinks');
+  const navToggle = document.getElementById('navToggle');
+
+  /* Hamburger */
+  navToggle.addEventListener('click', () => {
+    navToggle.classList.toggle('open');
+    navLinks.classList.toggle('open');
+  });
+  navLinks.querySelectorAll('a').forEach(a => {
+    a.addEventListener('click', () => {
+      navToggle.classList.remove('open');
+      navLinks.classList.remove('open');
     });
+  });
 
+  /* Nav shadow */
+  window.addEventListener('scroll', () => {
+    navbar.classList.toggle('scrolled', window.scrollY > 8);
+    updateActive();
+  });
 
-    /* 2 ── Highlight active nav link on scroll ────
-       As the user scrolls, detect which section is
-       visible and add .active to the matching links. */
+  /* Active link */
+  const sectionIds = ['home','summary','skills','projects','resume','contact'];
+  const linkMap = {};
+  sectionIds.forEach(id => {
+    linkMap[id] = navLinks.querySelector(`a[href="#${id}"]`);
+  });
 
-    // All nav links (desktop + mobile)
-    const navLinks = document.querySelectorAll('.navbar-links a, .navbar-mobile a');
-    // All scroll-anchor elements that have an id
-    const anchors  = document.querySelectorAll('.scroll-anchor[id]');
-
-    function updateActiveLink() {
-      // trigger point = top quarter of the viewport
-      const trigger = window.scrollY + window.innerHeight * 0.25;
-
-      let current = 'home';   // fallback
-
-      anchors.forEach(anchor => {
-        // If the anchor has been scrolled past the trigger point, mark it current
-        if (anchor.offsetTop <= trigger) current = anchor.id;
-      });
-
-      navLinks.forEach(link => {
-        link.classList.remove('active');
-        // link.href ends in "#id" — extract just the id part
-        if (link.getAttribute('href') === '#' + current) {
-          link.classList.add('active');
-        }
-      });
-    }
-
-    window.addEventListener('scroll', updateActiveLink);
-    updateActiveLink();   // run once on page load
-
-
-    /* 3 ── Mobile hamburger toggle ────────────────
-       Click the hamburger → show/hide the dropdown
-       and animate the three bars into an ×.         */
-
-    const hamburger  = document.querySelector('.hamburger');
-    const mobileMenu = document.querySelector('.navbar-mobile');
-
-    hamburger.addEventListener('click', () => {
-      const isOpen = mobileMenu.classList.toggle('open');
-      hamburger.classList.toggle('open', isOpen);
-      hamburger.setAttribute('aria-expanded', isOpen);
+  function updateActive() {
+    let current = 'home';
+    sectionIds.forEach(id => {
+      const el = document.getElementById(id);
+      if (el && el.getBoundingClientRect().top < window.innerHeight * 0.42) current = id;
     });
-
-    // Close mobile menu when any link is tapped
-    mobileMenu.querySelectorAll('a').forEach(link => {
-      link.addEventListener('click', () => {
-        mobileMenu.classList.remove('open');
-        hamburger.classList.remove('open');
-        hamburger.setAttribute('aria-expanded', 'false');
-      });
+    sectionIds.forEach(id => {
+      if (linkMap[id]) linkMap[id].classList.toggle('active', id === current);
     });
-
-  </script>
+  }
+  updateActive();
+</script>
 
 </body>
 </html>
